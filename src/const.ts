@@ -9,11 +9,11 @@ dayjs.locale("ko")
 
 export { dayjs }
 
-export const WEDDING_DATE = dayjs.tz("2024-08-24 13:00", "Asia/Seoul")
+export const WEDDING_DATE = dayjs.tz("2026-02-07 13:50", "Asia/Busan")
 export const HOLIDAYS = [15]
 
-export const LOCATION = "서울대학교 연구공원 웨딩홀"
-export const LOCATION_ADDRESS = "서울시 관악구 관악로 1, 연구공원 본관 1층"
+export const LOCATION = "부산 아시아드시티 웨딩홀 - 마그리트홀"
+export const LOCATION_ADDRESS = "부산 연제구 거제동 1299 : 아시아드스타디움 1F"
 
 export const SHARE_ADDRESS = LOCATION
 export const SHARE_ADDRESS_TITLE = LOCATION
@@ -23,11 +23,11 @@ export const WEDDING_HALL_POSITION = [126.9594982, 37.4657134]
 export const NMAP_PLACE_ID = 13321741
 export const KMAP_PLACE_ID = 8634826
 
-export const BRIDE_FULLNAME = "정지원"
-export const BRIDE_FIRSTNAME = "지원"
-export const BRIDE_TITLE = "장녀"
-export const BRIDE_FATHER = "정상원"
-export const BRIDE_MOTHER = "박윤정"
+export const BRIDE_FULLNAME = "조유지"
+export const BRIDE_FIRSTNAME = "유지"
+export const BRIDE_TITLE = "삼녀"
+export const BRIDE_FATHER = ""
+export const BRIDE_MOTHER = "김정애"
 export const BRIDE_INFO = [
   {
     relation: "신부",
@@ -49,11 +49,11 @@ export const BRIDE_INFO = [
   },
 ]
 
-export const GROOM_FULLNAME = "남주호"
-export const GROOM_FIRSTNAME = "주호"
+export const GROOM_FULLNAME = "이규민"
+export const GROOM_FIRSTNAME = "규민"
 export const GROOM_TITLE = "차남"
-export const GROOM_FATHER = "남현태"
-export const GROOM_MOTHER = "김현영"
+export const GROOM_FATHER = "이태우"
+export const GROOM_MOTHER = "천해경"
 export const GROOM_INFO = [
   {
     relation: "신랑",
