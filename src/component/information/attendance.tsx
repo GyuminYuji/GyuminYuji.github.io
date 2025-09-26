@@ -39,7 +39,7 @@ export const AttendanceInfo = () => {
 
     openModal({
       className: "attendance-info-modal",
-      header: <div className="title">참석 의사 전달 안내</div>,
+      header: <div className="title">달 안내</div>,
       content: (
         <>
           <div className="info-message">
@@ -56,7 +56,7 @@ export const AttendanceInfo = () => {
           <div className="wedding-info">
             <HeartIcon /> 신랑 {GROOM_FULLNAME} & 신부 {BRIDE_FULLNAME}
             <br />
-            <CalendarIcon /> {WEDDING_DATE.format("YYYY년 MMMM D일 dddd A h시")}
+            <CalendarIcon /> {WEDDING_DATE.format("YYYY년 MMMM D일 dddd A h시 mm분")}
             <br />
             <MarkerIcon /> {LOCATION}
           </div>

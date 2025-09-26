@@ -25,16 +25,13 @@ export const Invitation = () => {
 
       <div className="break" />
 
-      <div className="content">싱그러운 여름 향기 가득한 날</div>
-      <div className="content">소중한 분들을 모시고</div>
-      <div className="content">사랑의 약속을 하려고 합니다.</div>
+      <div className="content">함께 맞이하는 열한 번째 겨울,</div>
+      <div className="content">따스한 햇살 아래에서</div>
+      <div className="content">평생을 약속하려 합니다.</div>
       <div className="break" />
-      <div className="content">햇살이 뜨거울 땐 가려주고,</div>
-      <div className="content">비가 오면 우산이 되어주는</div>
-      <div className="content">부부가 되겠습니다.</div>
-      <div className="break" />
-      <div className="content">기쁜날 함께 하시어</div>
-      <div className="content">저희의 앞날을 축복해 주세요.</div>
+      <div className="content">긴 시간 함께 걸어온 길처럼</div>
+      <div className="content">저희의 미래도 한결같이 이어질 수 있도록</div>
+      <div className="content">귀한 걸음으로 축하해 주시면 감사하겠습니다.</div>
 
       <div className="break" />
 
@@ -46,7 +43,7 @@ export const Invitation = () => {
         {GROOM_FULLNAME}
       </div>
       <div className="name">
-        {BRIDE_FATHER} · {BRIDE_MOTHER}
+        {BRIDE_MOTHER}
         <span className="relation">
           의 <span className="relation-name">{BRIDE_TITLE}</span>
         </span>{" "}
