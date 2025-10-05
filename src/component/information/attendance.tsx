@@ -38,8 +38,8 @@ export const AttendanceInfo = () => {
       return
 
     openModal({
-      className: "attendance-info-modal",
-      header: <div className="title">달 안내</div>,
+      className: "attendance-info-modal", 
+      header: <div className="title">참석 의사 전달 안내</div>,
       content: (
         <>
           <div className="info-message">

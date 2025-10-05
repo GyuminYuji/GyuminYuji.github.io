@@ -18,9 +18,9 @@ export const LOCATION_ADDRESS = "부산 연제구 거제동 1299 : 아시아드�
 export const SHARE_ADDRESS = LOCATION
 export const SHARE_ADDRESS_TITLE = LOCATION
 
-export const WEDDING_HALL_POSITION = [126.9594982, 37.4657134]
+export const WEDDING_HALL_POSITION = [129.058204, 35.190186]
 
-export const NMAP_PLACE_ID = 13321741
+export const NMAP_PLACE_ID = 19936207
 export const KMAP_PLACE_ID = 8634826
 
 export const BRIDE_FULLNAME = "조유지"
