@@ -26,7 +26,7 @@ export const KMAP_PLACE_ID = 14723705
 export const BRIDE_FULLNAME = "조유지"
 export const BRIDE_FIRSTNAME = "유지"
 export const BRIDE_TITLE = "차녀"
-export const BRIDE_FATHER = "???"
+export const BRIDE_FATHER = ""
 export const BRIDE_MOTHER = "김정애"
 export const BRIDE_INFO = [
   {
@@ -34,12 +34,6 @@ export const BRIDE_INFO = [
     name: BRIDE_FULLNAME,
     phone: "010-0000-0000",
     account: "우리은행 0000000000000",
-  },
-  {
-    relation: "신부 아버지",
-    name: BRIDE_FATHER,
-    phone: "010-0000-0000",
-    account: "하나은행 00000000000",
   },
   {
     relation: "신부 어머니",
