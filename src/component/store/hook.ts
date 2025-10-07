@@ -8,7 +8,7 @@ const baseUrl = import.meta.env.BASE_URL
 
 const NAVER_MAP_URL = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NAVER_MAP_CLIENT_ID}`
 // const KAKAO_SDK_URL = `${baseUrl}/kakao.min.js`
-const KAKAO_SDK_URL = `https://t1.kakaocdn.net/kakao_js_sdk/v4/kakao.min.js`
+const KAKAO_SDK_URL = `https://t1.kakaocdn.net/kakao_js_sdk/2.7.6/kakao.min.js`
 
 export const useNaver = () => {
   const { naver, setNaver } = useContext(StoreContext)
@@ -35,7 +35,7 @@ export const useKakao = () => {
   useEffect(() => {
     if (!KAKAO_SDK_JS_KEY) {
       return
-    }
+    }  
 
     if (!document.querySelector(`script[src="${KAKAO_SDK_URL}"]`)) {
       const script = document.createElement("script")
