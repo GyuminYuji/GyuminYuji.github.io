@@ -13,6 +13,19 @@ import { STATIC_ONLY } from "./env"
 import { useState, useRef, useEffect } from "react"
 import musicURL from "./assets/background-music.mp3"
 
+// SVG 아이콘 컴포넌트 정의
+const PlayIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M8 5v14l11-7z" />
+  </svg>
+)
+
+const PauseIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+  </svg>
+)
+
 function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -72,9 +85,13 @@ function App() {
       {/* 배경음악 오디오 요소 */}
       <audio ref={audioRef} src={musicURL} loop />
 
-      {/* 재생/일시정지 버튼 */}
-      <button className="music-button" onClick={togglePlay}>
-        {isPlaying ? "❚❚" : "▶"}
+      {/* 재생/일시정지 버튼: SVG 아이콘과 애니메이션 클래스 적용 */}
+      <button
+        className={`music-button ${isPlaying ? "playing" : ""}`}
+        onClick={togglePlay}
+        aria-label="음악 재생/일시정지"
+      >
+        {isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
 
       <BGEffect />
