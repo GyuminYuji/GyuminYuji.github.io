@@ -15,8 +15,8 @@ export const HOLIDAYS = [15]
 export const LOCATION = "부산 아시아드시티 웨딩홀 - 마그리트홀"
 export const LOCATION_ADDRESS = "부산 연제구 거제동 1299 : 아시아드스타디움 1F"
 
-export const SHARE_ADDRESS = LOCATION
-export const SHARE_ADDRESS_TITLE = LOCATION
+export const SHARE_ADDRESS = "부산 아시아드시티 웨딩홀"
+export const SHARE_ADDRESS_TITLE = "부산 아시아드시티 웨딩홀"
 
 export const WEDDING_HALL_POSITION = [129.058204, 35.190186]
 
@@ -32,7 +32,7 @@ export const BRIDE_INFO = [
   {
     relation: "신부",
     name: BRIDE_FULLNAME,
-    phone: "010-0000-0000",
+    phone: "010-5175-3140",
     account: "우리은행 0000000000000",
   },
   {
@@ -52,19 +52,19 @@ export const GROOM_INFO = [
   {
     relation: "신랑",
     name: GROOM_FULLNAME,
-    phone: "010-0000-0000",
-    account: "하나은행 00000000000000",
+    phone: "010-2988-8663",
+    account: "하나은행 000000000000",
   },
   {
     relation: "신랑 아버지",
     name: GROOM_FATHER,
-    phone: "010-0000-0000",
+    phone: "010-9589-8662",
     account: "신한은행 000000000000",
   },
   {
     relation: "신랑 어머니",
     name: GROOM_MOTHER,
-    phone: "010-0000-0000",
+    phone: "010-6644-8661",
     account: "국민은행 000000000000",
   },
 ]
