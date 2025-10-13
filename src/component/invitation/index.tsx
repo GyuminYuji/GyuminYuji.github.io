@@ -21,7 +21,7 @@ export const Invitation = () => {
   const { openModal, closeModal } = useModal()
   return (
     <LazyDiv className="card invitation">
-      <h2 className="english">Invitation</h2>
+      <h2 className="english">초대합니다</h2>
 
       <div className="break" />
 

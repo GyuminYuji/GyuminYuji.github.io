@@ -8,7 +8,7 @@ export const Location = () => {
   return (
     <>
       <LazyDiv className="card location">
-        <h2 className="english">Location</h2>
+        <h2 className="english">오시는 길</h2>
         <div className="addr">
           {LOCATION}
           <div className="detail">{LOCATION_ADDRESS}</div>

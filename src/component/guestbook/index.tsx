@@ -59,7 +59,7 @@ export const GuestBook = () => {
 
   return (
     <LazyDiv className="card guestbook">
-      <h2 className="english">Guest Book</h2>
+      <h2 className="english">방명록</h2>
 
       <div className="break" />
 

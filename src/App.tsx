@@ -10,10 +10,73 @@ import { GuestBook } from "./component/guestbook"
 import { LazyDiv } from "./component/lazyDiv"
 import { ShareButton } from "./component/shareButton"
 import { STATIC_ONLY } from "./env"
+import { useState, useRef, useEffect } from "react"
+import musicURL from "./assets/background-music.mp3"
 
 function App() {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+  // 사용자의 첫 상호작용이 있었는지 추적하기 위한 ref
+  const hasInteracted = useRef(false)
+
+  // 컴포넌트가 마운트될 때 첫 상호작용을 감지하는 이벤트 리스너를 설정합니다.
+  useEffect(() => {
+    const playMusicOnFirstInteraction = () => {
+      // 이미 상호작용이 있었거나 오디오가 준비되지 않았다면 아무것도 하지 않습니다.
+      if (hasInteracted.current || !audioRef.current) return
+
+      audioRef.current.play().catch((error) => {
+        // 자동 재생 실패는 흔한 경우이므로, 콘솔에만 기록합니다.
+        console.error("음악 자동 재생에 실패했습니다.", error)
+      })
+      setIsPlaying(true)
+      hasInteracted.current = true // 상호작용이 있었음을 기록
+
+      // 이벤트 리스너를 한 번만 실행하고 제거합니다.
+      document.removeEventListener("click", playMusicOnFirstInteraction)
+      document.removeEventListener("touchstart", playMusicOnFirstInteraction)
+    }
+
+    // 클릭 또는 터치 이벤트를 감지합니다.
+    document.addEventListener("click", playMusicOnFirstInteraction)
+    document.addEventListener("touchstart", playMusicOnFirstInteraction)
+
+    // 컴포넌트가 언마운트될 때 리스너를 정리합니다.
+    return () => {
+      document.removeEventListener("click", playMusicOnFirstInteraction)
+      document.removeEventListener("touchstart", playMusicOnFirstInteraction)
+    }
+  }, []) // 이 useEffect는 한 번만 실행됩니다.
+
+  const togglePlay = () => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    const nextIsPlaying = !isPlaying
+    setIsPlaying(nextIsPlaying)
+
+    if (nextIsPlaying) {
+      // play()는 Promise를 반환하며, 사용자가 상호작용하기 전에 호출되면 실패할 수 있습니다.
+      audio.play().catch((error) => {
+        console.error("음악 재생에 실패했습니다.", error)
+        // 재생에 실패하면, UI 상태를 다시 false로 동기화합니다.
+        setIsPlaying(false)
+      })
+    } else {
+      audio.pause()
+    }
+  }
+
   return (
     <div className="background">
+      {/* 배경음악 오디오 요소 */}
+      <audio ref={audioRef} src={musicURL} loop />
+
+      {/* 재생/일시정지 버튼 */}
+      <button className="music-button" onClick={togglePlay}>
+        {isPlaying ? "❚❚" : "▶"}
+      </button>
+
       <BGEffect />
       <div className="card-view">
         <LazyDiv className="card-group">
