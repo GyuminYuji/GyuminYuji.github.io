@@ -144,10 +144,7 @@ export const Gallery = () => {
 
       return (
         <div className="photo-viewer-wrapper">
-          <div className="photo-viewer-header">
-            <span className="photo-counter">{currentIndex + 1} / {GALLERY_IMAGES.length}</span>
-            <button className="close-btn" onClick={closeModal}>✕</button>
-          </div>
+          <button className="close-btn" onClick={closeModal}>✕</button>
           
           <div 
             className="photo-viewer-container"
@@ -166,31 +163,37 @@ export const Gallery = () => {
             />
           </div>
 
+          {/* 하단 바(footer)를 사진 컨테이너 바로 아래로 이동 */}
+          <div className="photo-viewer-footer">
+            <span className="photo-counter">{currentIndex + 1} / {GALLERY_IMAGES.length}</span>
+            <div className="photo-viewer-indicators">
+              {GALLERY_IMAGES.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`indicator-dot ${idx === currentIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentIndex(idx)}
+                />
+              ))}
+            </div>
+            {/* 카운터와 인디케이터의 공간을 맞추기 위한 빈 요소 */}
+            <span className="photo-counter-placeholder" />
+          </div>
+
           <div className="photo-viewer-navigation">
             <button 
               className="nav-btn prev-btn" 
               onClick={goToPrevious}
               aria-label="이전 사진"
             >
-              ‹
+              <span>‹</span>
             </button>
             <button 
               className="nav-btn next-btn" 
               onClick={goToNext}
               aria-label="다음 사진"
             >
-              ›
+              <span>›</span>
             </button>
-          </div>
-
-          <div className="photo-viewer-indicators">
-            {GALLERY_IMAGES.map((_, idx) => (
-              <button
-                key={idx}
-                className={`indicator-dot ${idx === currentIndex ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(idx)}
-              />
-            ))}
           </div>
         </div>
       )

@@ -153,8 +153,6 @@ $transition-duration: 0.3s;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-      // grid-auto-rows가 설정되었으므로, aspect-ratio는 유지하거나 제거해도 됩니다.
-      // 유연성을 위해 유지합니다.
 
       &:hover {
         transform: translateY(-1px);
@@ -176,12 +174,17 @@ $transition-duration: 0.3s;
 
   // 모바일 최적화
   @media (max-width: 768px) {
+    &.card {
+      overflow: visible;
+    }
     .photo-grid {
       grid-template-columns: repeat(3, 1fr); // 모바일에서도 3열 유지
       gap: 0.4rem;
+      max-height: none;
 
       .photo-grid-item {
         border-radius: 4px;
+        height: auto;
       }
     }
   }
@@ -189,7 +192,8 @@ $transition-duration: 0.3s;
   // 매우 작은 화면에서는 2열로
   @media (max-width: 400px) {
     .photo-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+      max-height: none;
       gap: 0.5rem;
     }
   }
@@ -197,13 +201,9 @@ $transition-duration: 0.3s;
 
 // 사진 뷰어 모달 스타일
 .photo-viewer-modal {
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
+  // 모달 자체의 여백과 배경을 모두 제거합니다.
+  padding: 0 !important;
+  background: none !important;
 
   .modal-content {
     width: 100%;
@@ -213,47 +213,34 @@ $transition-duration: 0.3s;
     margin: 0;
     padding: 0;
     border-radius: 0;
+    background: none; // modal-content의 배경도 제거
   }
 
   .photo-viewer-wrapper {
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.95); // 사진 뷰어의 전체 배경색
     display: flex;
     flex-direction: column;
     position: relative;
 
-    .photo-viewer-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.5rem;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
+    /* 닫기 버튼을 우측 상단에 고정시킵니다. */
+    .close-btn {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+      top: 1rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+      z-index: 1001; // 다른 요소들보다 위에 오도록 z-index 설정
 
-      .photo-counter {
-        font-size: 1rem;
-        opacity: 0.9;
-      }
-
-      .close-btn {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 50%;
-        transition: background-color 0.2s ease;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
       }
     }
 
@@ -263,8 +250,8 @@ $transition-duration: 0.3s;
       justify-content: center;
       align-items: center;
       overflow: auto;
-      margin-top: 60px; /* 헤더 높이만큼 여백 */
-      margin-bottom: 100px; /* 네비게이션과 인디케이터 공간 */
+      padding-top: 0; /* 헤더가 없으므로 padding-top 제거 */
+      padding-bottom: 1rem; /* 푸터와의 간격을 위해 약간의 여백만 남김 */
 
       .photo-viewer-image {
         max-width: 95%;
@@ -285,14 +272,16 @@ $transition-duration: 0.3s;
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      width: 100%;
+      width: auto;
+      left: 1rem;
+      right: 1rem;
       display: flex;
       justify-content: space-between;
       pointer-events: none;
       z-index: 999;
 
       .nav-btn {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.4);
         border: none;
         color: white;
         font-size: 2rem;
@@ -301,12 +290,22 @@ $transition-duration: 0.3s;
         border-radius: 50%;
         cursor: pointer;
         pointer-events: all;
-        transition: background-color 0.2s ease, transform 0.2s ease;
-        margin: 0 1rem;
+        transition: background-color 0.2s ease; // transform transition 제거
+        display: flex; // span을 중앙 정렬하기 위해 추가
+        justify-content: center;
+        align-items: center;
+
+        span {
+          color: rgba(255,255,255,0.7);
+          transition: transform 0.2s ease; // span에 transform transition 적용
+        }
 
         &:hover {
           background: rgba(0, 0, 0, 0.8);
-          transform: scale(1.1);
+          
+          span {
+            transform: scale(1.1); // span만 확대
+          }
         }
 
         &.prev-btn {
@@ -319,17 +318,46 @@ $transition-duration: 0.3s;
       }
     }
 
+    /* 하단 바(footer) 스타일 수정 */
+    .photo-viewer-footer {
+      /* position: fixed 속성들을 제거하여 일반 블록 요소로 변경 */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: none; // 배경 제거
+      color: white;
+      width: 100%; // 너비 100%
+      z-index: 1000;
+
+      .photo-counter, .photo-counter-placeholder {
+        font-size: 1rem;
+        color: white;
+        // opacity: 0.2;
+        flex: 1 0 0; // flex-grow: 1, flex-shrink: 0, flex-basis: 0
+        min-width: 50px; // 최소 너비 보장
+      }
+
+      .photo-counter {
+        text-align: left; // 왼쪽 정렬
+      }
+      
+      .photo-counter-placeholder {
+        text-align: right; // 오른쪽 정렬 (내용이 없어서 시각적 변화는 없음)
+      }
+    }
+
     .photo-viewer-indicators {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
+      /* position: fixed 속성들을 제거하고 footer 내부 배치에 맞게 수정 */
+      position: static;
+      transform: none;
+      background: none; // 부모인 footer의 배경을 사용하므로 제거
+      padding: 0;
+      flex-shrink: 0; // 인디케이터 너비가 줄어들지 않도록 설정
+      
+      // 기존 스타일 유지
       display: flex;
       gap: 0.5rem;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 0.8rem 1.2rem;
-      border-radius: 25px;
-      z-index: 999;
       max-width: 90%;
       overflow-x: auto;
 
