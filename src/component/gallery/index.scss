@@ -12,6 +12,9 @@ $transition-duration: 0.3s;
 }
 
 .gallery {
+  &.card {
+    justify-content: flex-start;
+  }
   .carousel-wrapper {
     display: flex;
     flex-direction: column;
@@ -174,6 +177,12 @@ $transition-duration: 0.3s;
 
   // 모바일 최적화
   @media (max-width: 768px) {
+      &.card {
+      opacity: 1 !important;
+      animation: none !important;
+      transform: none !important;
+    }
+    
     .photo-grid {
       // 데스크톱에서 사용하던 높이 제한 및 스크롤 관련 속성을 모두 초기화합니다.
       max-height: none;
