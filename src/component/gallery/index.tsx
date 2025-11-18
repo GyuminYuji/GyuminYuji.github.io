@@ -163,6 +163,43 @@ export const Gallery = () => {
     }, 300)
   }, [])
 
+  // 개별 사진 확대 보기를 위한 함수 추가
+  const openPhotoModal = useCallback((photoIndex: number) => {
+    openModal({
+      className: "photo-detail-modal",
+      closeOnClickBackground: true,
+      header: <div className="title">사진 보기 ({photoIndex + 1}/{GALLERY_IMAGES.length})</div>,
+      content: (
+        <div className="photo-detail-wrapper">
+          <img
+            src={GALLERY_IMAGES[photoIndex]}
+            alt={`Photo ${photoIndex + 1}`}
+            draggable={false}
+            className="photo-detail-image"
+          />
+        </div>
+      ),
+      footer: (
+        <Button
+          buttonStyle="style2"
+          className="bg-light-grey-color text-dark-color"
+          onClick={closeModal}
+        >
+          닫기
+        </Button>
+      ),
+    })
+  }, [openModal, closeModal])
+
+  // 캐러셀에서 사진 클릭 핸들러 추가
+  const handleCarouselImageClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (statusRef.current === "stationary") {
+      openPhotoModal(slideRef.current)
+    }
+  }, [openPhotoModal])
+
   /* Events */
   const onMouseMove = useCallback(
     (e: MouseEvent) => {
@@ -303,19 +340,81 @@ export const Gallery = () => {
           <div className={transformClass} style={transformStyle}>
             {["dragging", "dragEnding"].includes(status) && [
               ...(slide === 0
-                ? [CAROUSEL_ITEMS[CAROUSEL_ITEMS.length - 1]]
+                ? [
+                    <div className="carousel-item" key={`prev-${CAROUSEL_ITEMS.length - 1}`}>
+                      <img 
+                        src={GALLERY_IMAGES[GALLERY_IMAGES.length - 1]} 
+                        draggable={false} 
+                        alt={`${GALLERY_IMAGES.length - 1}`}
+                        onClick={handleCarouselImageClick}
+                      />
+                    </div>
+                  ]
                 : []),
-              ...CAROUSEL_ITEMS.slice(slide === 0 ? 0 : slide - 1, slide + 2),
-              ...(slide === CAROUSEL_ITEMS.length - 1
-                ? [CAROUSEL_ITEMS[0]]
+              ...GALLERY_IMAGES.slice(slide === 0 ? 0 : slide - 1, slide + 2).map((image, idx) => {
+                const actualIndex = slide === 0 ? idx : slide - 1 + idx
+                return (
+                  <div className="carousel-item" key={actualIndex}>
+                    <img 
+                      src={image} 
+                      draggable={false} 
+                      alt={`${actualIndex}`}
+                      onClick={handleCarouselImageClick}
+                    />
+                  </div>
+                )
+              }),
+              ...(slide === GALLERY_IMAGES.length - 1
+                ? [
+                    <div className="carousel-item" key={`next-0`}>
+                      <img 
+                        src={GALLERY_IMAGES[0]} 
+                        draggable={false} 
+                        alt="0"
+                        onClick={handleCarouselImageClick}
+                      />
+                    </div>
+                  ]
                 : []),
             ]}
             {status === "moving-right" &&
-              CAROUSEL_ITEMS.slice(moveOption.srcIdx, moveOption.dstIdx + 1)}
+              GALLERY_IMAGES.slice(moveOption.srcIdx, moveOption.dstIdx + 1).map((image, idx) => {
+                const actualIndex = moveOption.srcIdx + idx
+                return (
+                  <div className="carousel-item" key={actualIndex}>
+                    <img 
+                      src={image} 
+                      draggable={false} 
+                      alt={`${actualIndex}`}
+                      onClick={handleCarouselImageClick}
+                    />
+                  </div>
+                )
+              })}
             {status === "moving-left" &&
-              CAROUSEL_ITEMS.slice(moveOption.dstIdx, moveOption.srcIdx + 1)}
-            {["stationary", "clicked", "clickCanceled"].includes(status) &&
-              CAROUSEL_ITEMS[slide]}
+              GALLERY_IMAGES.slice(moveOption.dstIdx, moveOption.srcIdx + 1).map((image, idx) => {
+                const actualIndex = moveOption.dstIdx + idx
+                return (
+                  <div className="carousel-item" key={actualIndex}>
+                    <img 
+                      src={image} 
+                      draggable={false} 
+                      alt={`${actualIndex}`}
+                      onClick={handleCarouselImageClick}
+                    />
+                  </div>
+                )
+              })}
+            {["stationary", "clicked", "clickCanceled"].includes(status) && (
+              <div className="carousel-item">
+                <img 
+                  src={GALLERY_IMAGES[slide]} 
+                  draggable={false} 
+                  alt={`${slide}`}
+                  onClick={handleCarouselImageClick}
+                />
+              </div>
+            )}
           </div>
           <div className="carousel-control">
             <div
@@ -374,10 +473,11 @@ export const Gallery = () => {
                       draggable={false}
                       onClick={() => {
                         if (statusRef.current === "stationary") {
-                          if (idx !== slideRef.current) {
-                            move(slideRef.current, idx)
-                          }
-                          closeModal()
+                          // 사진 전체보기에서 개별 사진 클릭 시 확대 보기
+                          closeModal() // 먼저 전체보기 모달 닫기
+                          setTimeout(() => {
+                            openPhotoModal(idx) // 개별 사진 확대 모달 열기
+                          }, 100)
                         }
                       }}
                     />
