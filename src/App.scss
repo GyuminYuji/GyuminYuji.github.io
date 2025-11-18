@@ -158,6 +158,7 @@ body {
   .card-view {
     width: 980px;
     text-align: center;
+    height: auto;
 
     @media (max-width: 980px) {
       width: 500px;
