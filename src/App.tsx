@@ -34,10 +34,23 @@ function App() {
 
   // 컴포넌트가 마운트될 때 첫 상호작용을 감지하는 이벤트 리스너를 설정합니다.
   useEffect(() => {
-    const playMusicOnFirstInteraction = () => {
-      // 이미 상호작용이 있었거나 오디오가 준비되지 않았다면 아무것도 하지 않습니다.
-      if (hasInteracted.current || !audioRef.current) return
+    const playMusicOnFirstInteraction = (e: MouseEvent | TouchEvent) => {
+      console.log("음악 재생 리스너 실행됨"); // 리스너가 실행될 때마다 로그 출력
 
+      // 클릭이 갤러리 내부에서 발생했다면, 음악 재생 로직을 실행하지 않고 갤러리에 이벤트를 양보합니다.
+      const target = e.target as Element;
+      if (target.closest('.gallery')) {
+        console.log("갤러리 클릭 감지, 음악 재생 건너뜀");
+        return;
+      }
+
+      // 이미 상호작용이 있었거나 오디오가 준비되지 않았다면 아무것도 하지 않습니다.
+      if (hasInteracted.current || !audioRef.current) {
+        console.log("이미 상호작용 했거나 오디오 준비 안됨, 리스너 실행 중단");
+        return;
+      }
+
+      console.log("첫 상호작용 감지, 음악 재생 시작");
       audioRef.current.play().catch((error) => {
         // 자동 재생 실패는 흔한 경우이므로, 콘솔에만 기록합니다.
         console.error("음악 자동 재생에 실패했습니다.", error)
@@ -46,18 +59,20 @@ function App() {
       hasInteracted.current = true // 상호작용이 있었음을 기록
 
       // 이벤트 리스너를 한 번만 실행하고 제거합니다.
-      document.removeEventListener("click", playMusicOnFirstInteraction)
-      document.removeEventListener("touchstart", playMusicOnFirstInteraction)
+      // capture 단계에서 등록했으므로, 제거할 때도 동일한 옵션을 사용해야 합니다.
+      document.removeEventListener("click", playMusicOnFirstInteraction, true)
+      document.removeEventListener("touchstart", playMusicOnFirstInteraction, true)
+      console.log("✅ 이벤트 리스너 제거 완료"); // 리스너가 제거되었음을 명확히 표시
     }
 
-    // 클릭 또는 터치 이벤트를 감지합니다.
-    document.addEventListener("click", playMusicOnFirstInteraction)
-    document.addEventListener("touchstart", playMusicOnFirstInteraction)
+    // capture: true 옵션을 사용하여 이벤트가 하위 요소(갤러리)에 도달하기 전에 먼저 실행되도록 합니다.
+    document.addEventListener("click", playMusicOnFirstInteraction, true)
+    document.addEventListener("touchstart", playMusicOnFirstInteraction, true)
 
     // 컴포넌트가 언마운트될 때 리스너를 정리합니다.
     return () => {
-      document.removeEventListener("click", playMusicOnFirstInteraction)
-      document.removeEventListener("touchstart", playMusicOnFirstInteraction)
+      document.removeEventListener("click", playMusicOnFirstInteraction, true)
+      document.removeEventListener("touchstart", playMusicOnFirstInteraction, true)
     }
   }, []) // 이 useEffect는 한 번만 실행됩니다.
 
