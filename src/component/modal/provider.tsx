@@ -2,6 +2,7 @@ import {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react"
@@ -90,8 +91,13 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
     }
   }, [modalInfoList])
 
+  const value = useMemo(
+    () => ({ modalInfoList, openModal, closeModal }),
+    [modalInfoList, openModal, closeModal],
+  )
+
   return (
-    <ModalContext.Provider value={{ modalInfoList, openModal, closeModal }}>
+    <ModalContext.Provider value={value}>
       {children}
       <div className="modals-wrappeer" ref={modalWrapperRef}>
         {modalInfoList.map((modalInfo, idx) => (

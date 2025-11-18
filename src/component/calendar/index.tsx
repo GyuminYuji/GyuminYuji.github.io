@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, memo } from "react"
 import {
   BRIDE_FIRSTNAME,
   GROOM_FIRSTNAME,
@@ -10,7 +10,7 @@ import { LazyDiv } from "../lazyDiv"
 const firstDayOfWeek = WEDDING_DATE.startOf("month").day()
 const daysInMonth = WEDDING_DATE.daysInMonth()
 
-export const Calendar = () => {
+export const Calendar = memo(() => {
   const [tsDiff, setTsDiff] = useState(WEDDING_DATE.diff())
 
   const dayDiff = useMemo(() => {
@@ -26,7 +26,7 @@ export const Calendar = () => {
     }, 1000)
 
     return () => clearInterval(interval)
-  })
+  }, [])
 
   const diffs = useMemo(() => {
     const tsDiff_ = Math.abs(tsDiff)
@@ -131,4 +131,4 @@ export const Calendar = () => {
       </div>
     </LazyDiv>
   )
-}
+})

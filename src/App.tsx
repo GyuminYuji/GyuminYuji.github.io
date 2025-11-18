@@ -109,7 +109,7 @@ function App() {
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
 
-      <BGEffect />
+      {/* <BGEffect /> */}
       <div className="card-view">
         <LazyDiv className="card-group">
           {/* 표지 */}

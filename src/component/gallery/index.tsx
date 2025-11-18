@@ -1,15 +1,39 @@
 import { useCallback, useEffect, useState, useRef, memo } from "react"
-import { LazyDiv } from "../lazyDiv"
 import { useModal } from "../modal"
 import { GALLERY_IMAGES } from "../../images"
 
-// React.memo를 사용하여 Gallery 컴포넌트를 감싸줍니다.
-export const Gallery = memo(() => {
+// 사진 그리드만 렌더링하는 순수한 컴포넌트를 분리하고 React.memo로 감쌉니다.
+const GalleryGrid = memo(
+  ({ onPhotoClick }: { onPhotoClick: (index: number) => void }) => {
+    console.log("Rendering GalleryGrid"); // 이 로그는 이제 한 번만 보여야 합니다.
+    return (
+      <div className="photo-grid">
+        {GALLERY_IMAGES.map((image, idx) => {
+          return (
+            <div
+              key={idx}
+              className="photo-grid-item"
+              onClick={() => onPhotoClick(idx)}
+            >
+              <img
+                src={image}
+                alt={`Photo ${idx + 1}`}
+                draggable={false}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
+);
+
+// 메인 Gallery 컴포넌트
+export const Gallery = () => {
   const { openModal, closeModal } = useModal()
 
   useEffect(() => {
     // preload images
-    console.log('Gallery loading, images count:', GALLERY_IMAGES.length); // 디버그
     GALLERY_IMAGES.forEach((image) => {
       const img = new Image()
       img.src = image
@@ -18,12 +42,9 @@ export const Gallery = memo(() => {
 
   // 개별 사진 확대 보기를 위한 함수
   const openPhotoModal = useCallback((photoIndex: number) => {
-    console.log('openPhotoModal called with index:', photoIndex); // 디버그
     const PhotoViewer = () => {
       const [currentIndex, setCurrentIndex] = useState(photoIndex)
       
-      // 일반 변수 대신 useRef를 사용하여 상태를 관리합니다.
-      // 이렇게 하면 리렌더링 시에도 값이 유지되며, 모달이 다시 열릴 때마다 독립적인 상태를 가집니다.
       const startX = useRef(0)
       const startY = useRef(0)
       const isDragging = useRef(false)
@@ -40,7 +61,7 @@ export const Gallery = memo(() => {
       }
 
       const handleTouchStart = (e: React.TouchEvent) => {
-        if (e.touches.length === 1) { // 단일 터치만 처리 (핀치 줌과 구분)
+        if (e.touches.length === 1) {
           startX.current = e.touches[0].clientX
           startY.current = e.touches[0].clientY
           isDragging.current = false
@@ -53,7 +74,6 @@ export const Gallery = memo(() => {
           const deltaX = e.touches[0].clientX - startX.current
           const deltaY = e.touches[0].clientY - startY.current
           
-          // 드래그 방향 감지
           if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
               dragDirection.current = 'horizontal'
@@ -70,15 +90,11 @@ export const Gallery = memo(() => {
           e.preventDefault()
           const deltaX = e.changedTouches[0].clientX - startX.current
           
-          if (Math.abs(deltaX) > 50) { // 최소 드래그 거리
-            if (deltaX > 0) {
-              goToPrevious()
-            } else {
-              goToNext()
-            }
+          if (Math.abs(deltaX) > 50) {
+            if (deltaX > 0) goToPrevious()
+            else goToNext()
           }
         } else if (!isDragging.current && !dragDirection.current) {
-          // 드래그가 아닌 단순 터치일 때 모달 닫기
           closeModal()
         }
         
@@ -86,7 +102,6 @@ export const Gallery = memo(() => {
         dragDirection.current = null
       }
 
-      // 마우스 이벤트 (데스크톱용)
       const handleMouseDown = (e: React.MouseEvent) => {
         startX.current = e.clientX
         startY.current = e.clientY
@@ -95,7 +110,7 @@ export const Gallery = memo(() => {
       }
 
       const handleMouseMove = (e: React.MouseEvent) => {
-        if (e.buttons === 1 && !isDragging.current) { // 왼쪽 버튼이 눌린 상태
+        if (e.buttons === 1 && !isDragging.current) {
           const deltaX = e.clientX - startX.current
           const deltaY = e.clientY - startY.current
           
@@ -116,14 +131,10 @@ export const Gallery = memo(() => {
           const deltaX = e.clientX - startX.current
           
           if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) {
-              goToPrevious()
-            } else {
-              goToNext()
-            }
+            if (deltaX > 0) goToPrevious()
+            else goToNext()
           }
         } else if (!isDragging.current && dragDirection.current !== 'horizontal') {
-          // 드래그가 아닌 단순 클릭일 때 모달 닫기
           closeModal()
         }
         
@@ -199,32 +210,8 @@ export const Gallery = memo(() => {
       {GALLERY_IMAGES.length === 0 ? (
         <div>이미지가 없습니다.</div>
       ) : (
-        <div className="photo-grid">
-          {GALLERY_IMAGES.map((image, idx) => {
-            console.log('Rendering image:', idx, image); // 디버그
-            return (
-              <div 
-                key={idx} 
-                className="photo-grid-item" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log('Photo clicked:', idx); // 디버그용
-                  openPhotoModal(idx);
-                }}
-              >
-                <img
-                  src={image}
-                  alt={`Photo ${idx + 1}`}
-                  draggable={false}
-                  onLoad={() => console.log('Image loaded:', idx)}
-                  onError={() => console.log('Image error:', idx)}
-                />
-              </div>
-            );
-          })}
-        </div>
+        <GalleryGrid onPhotoClick={openPhotoModal} />
       )}
     </div>
   )
-})
+}
