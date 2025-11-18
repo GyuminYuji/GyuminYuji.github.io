@@ -43,10 +43,14 @@ export const Gallery = () => {
   // 개별 사진 확대 보기를 위한 함수
   const openPhotoModal = useCallback((photoIndex: number) => {
     const PhotoViewer = () => {
+      console.log(`PhotoViewer is rendering. Current index: ${photoIndex}`);
       const [currentIndex, setCurrentIndex] = useState(photoIndex)
       
       const startX = useRef(0)
       const startY = useRef(0)
+      // deltaX, deltaY를 state가 아닌 ref로 변경하여 리렌더링 방지
+      const deltaX = useRef(0)
+      const deltaY = useRef(0)
       const isDragging = useRef(false)
       const dragDirection = useRef<'horizontal' | 'vertical' | null>(null)
 
@@ -64,22 +68,28 @@ export const Gallery = () => {
         if (e.touches.length === 1) {
           startX.current = e.touches[0].clientX
           startY.current = e.touches[0].clientY
+          // 드래그 시작 시 delta 값 초기화
+          deltaX.current = 0
+          deltaY.current = 0
           isDragging.current = false
           dragDirection.current = null
         }
       }
 
       const handleTouchMove = (e: React.TouchEvent) => {
-        if (e.touches.length === 1 && !isDragging.current) {
-          const deltaX = e.touches[0].clientX - startX.current
-          const deltaY = e.touches[0].clientY - startY.current
-          
-          if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-              dragDirection.current = 'horizontal'
-              isDragging.current = true
-            } else {
-              dragDirection.current = 'vertical'
+        if (e.touches.length === 1) {
+          // state를 업데이트하는 대신 ref의 현재 값만 변경
+          deltaX.current = e.touches[0].clientX - startX.current
+          deltaY.current = e.touches[0].clientY - startY.current
+
+          if (!isDragging.current && dragDirection.current === null) {
+            if (Math.abs(deltaX.current) > 10 || Math.abs(deltaY.current) > 10) {
+              if (Math.abs(deltaX.current) > Math.abs(deltaY.current)) {
+                dragDirection.current = 'horizontal'
+                isDragging.current = true
+              } else {
+                dragDirection.current = 'vertical'
+              }
             }
           }
         }
@@ -87,14 +97,12 @@ export const Gallery = () => {
 
       const handleTouchEnd = (e: React.TouchEvent) => {
         if (dragDirection.current === 'horizontal' && isDragging.current) {
-          e.preventDefault()
-          const deltaX = e.changedTouches[0].clientX - startX.current
-          
-          if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) goToPrevious()
+          // 터치가 끝났을 때 최종 deltaX 값으로 판단
+          if (Math.abs(deltaX.current) > 50) {
+            if (deltaX.current > 0) goToPrevious()
             else goToNext()
           }
-        } else if (!isDragging.current && !dragDirection.current) {
+        } else if (!isDragging.current && dragDirection.current !== 'horizontal') {
           closeModal()
         }
         
@@ -105,21 +113,27 @@ export const Gallery = () => {
       const handleMouseDown = (e: React.MouseEvent) => {
         startX.current = e.clientX
         startY.current = e.clientY
+        // 드래그 시작 시 delta 값 초기화
+        deltaX.current = 0
+        deltaY.current = 0
         isDragging.current = false
         dragDirection.current = null
       }
 
       const handleMouseMove = (e: React.MouseEvent) => {
-        if (e.buttons === 1 && !isDragging.current) {
-          const deltaX = e.clientX - startX.current
-          const deltaY = e.clientY - startY.current
-          
-          if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-              dragDirection.current = 'horizontal'
-              isDragging.current = true
-            } else {
-              dragDirection.current = 'vertical'
+        if (e.buttons === 1) { // 마우스 버튼이 눌린 상태에서만
+          // state를 업데이트하는 대신 ref의 현재 값만 변경
+          deltaX.current = e.clientX - startX.current
+          deltaY.current = e.clientY - startY.current
+
+          if (!isDragging.current && dragDirection.current === null) {
+            if (Math.abs(deltaX.current) > 10 || Math.abs(deltaY.current) > 10) {
+              if (Math.abs(deltaX.current) > Math.abs(deltaY.current)) {
+                dragDirection.current = 'horizontal'
+                isDragging.current = true
+              } else {
+                dragDirection.current = 'vertical'
+              }
             }
           }
         }
@@ -128,10 +142,11 @@ export const Gallery = () => {
       const handleMouseUp = (e: React.MouseEvent) => {
         if (dragDirection.current === 'horizontal' && isDragging.current) {
           e.preventDefault()
-          const deltaX = e.clientX - startX.current
+          // 마우스 버튼을 뗐을 때 최종 deltaX 값으로 판단
+          const finalDeltaX = e.clientX - startX.current
           
-          if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) goToPrevious()
+          if (Math.abs(finalDeltaX) > 50) {
+            if (finalDeltaX > 0) goToPrevious()
             else goToNext()
           }
         } else if (!isDragging.current && dragDirection.current !== 'horizontal') {

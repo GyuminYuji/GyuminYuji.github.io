@@ -106,6 +106,7 @@ $colors: (
   }
 }
 
+/* lazy-fade-in 애니메이션 제거
 @keyframes lazy-fade-in {
   from {
     opacity: 0;
@@ -117,7 +118,7 @@ $colors: (
     z-index: 3;
     transform: translateY(0);
   }
-}
+*/
 
 button {
   font-family: "MapoGoldenPier";
@@ -177,12 +178,14 @@ body {
         margin: 10px;
         background-color: var(--light-color);
 
+        /* 애니메이션 관련 코드 제거
         opacity: 0;
         &.lazy-active {
           animation-name: lazy-fade-in;
           animation-duration: 3s;
           opacity: 1;
         }
+        */
 
         @media print {
           opacity: 1;
@@ -206,12 +209,14 @@ body {
           margin: 0.5rem;
           width: inherit;
 
+          /* 애니메이션 관련 코드 제거
           opacity: 0;
           &.lazy-active {
             animation-name: lazy-fade-in;
             animation-duration: 3s;
             opacity: 1;
           }
+          */
 
           @media print {
             opacity: 1;
@@ -227,15 +232,16 @@ body {
       background-color: var(--light-color);
       box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.2);
       margin: 0.5rem;
-      opacity: 0;
-      margin: 0.5rem;
       padding: 1rem;
+      
+      /* 애니메이션 관련 코드 제거
       opacity: 0;
       &.lazy-active {
         animation-name: lazy-fade-in;
         animation-duration: 3s;
         opacity: 1;
       }
+      */
 
       @media print {
         opacity: 1;
