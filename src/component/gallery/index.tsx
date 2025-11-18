@@ -81,11 +81,6 @@ export const Gallery = () => {
     clickMoveRef.current = clickMove
   }
 
-  // For debugging
-  // useEffect(() => {
-  //   console.log(status)
-  // }, [status])
-
   const click = (
     status: Status,
     clientX: number,
@@ -276,181 +271,6 @@ export const Gallery = () => {
     }
   }, [status])
 
-  // 개별 사진 확대 보기를 위한 함수 추가
-  const openPhotoModal = useCallback((photoIndex: number) => {
-    const PhotoViewer = () => {
-      const [currentIndex, setCurrentIndex] = useState(photoIndex)
-      let startX = 0
-      let startY = 0
-      let isDragging = false
-      let dragDirection: 'horizontal' | 'vertical' | null = null
-
-      const goToPrevious = () => {
-        const newIndex = (currentIndex - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-        setCurrentIndex(newIndex)
-      }
-
-      const goToNext = () => {
-        const newIndex = (currentIndex + 1) % GALLERY_IMAGES.length
-        setCurrentIndex(newIndex)
-      }
-
-      const handleTouchStart = (e: React.TouchEvent) => {
-        if (e.touches.length === 1) { // 단일 터치만 처리 (핀치 줌과 구분)
-          startX = e.touches[0].clientX
-          startY = e.touches[0].clientY
-          isDragging = false
-          dragDirection = null
-        }
-      }
-
-      const handleTouchMove = (e: React.TouchEvent) => {
-        if (e.touches.length === 1 && !isDragging) {
-          const deltaX = e.touches[0].clientX - startX
-          const deltaY = e.touches[0].clientY - startY
-          
-          // 드래그 방향 감지
-          if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-              dragDirection = 'horizontal'
-              isDragging = true
-            } else {
-              dragDirection = 'vertical'
-            }
-          }
-        }
-      }
-
-      const handleTouchEnd = (e: React.TouchEvent) => {
-        if (dragDirection === 'horizontal' && isDragging) {
-          e.preventDefault()
-          const deltaX = e.changedTouches[0].clientX - startX
-          
-          if (Math.abs(deltaX) > 50) { // 최소 드래그 거리
-            if (deltaX > 0) {
-              goToPrevious()
-            } else {
-              goToNext()
-            }
-          }
-        }
-        
-        isDragging = false
-        dragDirection = null
-      }
-
-      // 마우스 이벤트 (데스크톱용)
-      const handleMouseDown = (e: React.MouseEvent) => {
-        startX = e.clientX
-        startY = e.clientY
-        isDragging = false
-        dragDirection = null
-      }
-
-      const handleMouseMove = (e: React.MouseEvent) => {
-        if (e.buttons === 1 && !isDragging) { // 왼쪽 버튼이 눌린 상태
-          const deltaX = e.clientX - startX
-          const deltaY = e.clientY - startY
-          
-          if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-              dragDirection = 'horizontal'
-              isDragging = true
-            } else {
-              dragDirection = 'vertical'
-            }
-          }
-        }
-      }
-
-      const handleMouseUp = (e: React.MouseEvent) => {
-        if (dragDirection === 'horizontal' && isDragging) {
-          e.preventDefault()
-          const deltaX = e.clientX - startX
-          
-          if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) {
-              goToPrevious()
-            } else {
-              goToNext()
-            }
-          }
-        }
-        
-        isDragging = false
-        dragDirection = null
-      }
-
-      return (
-        <div className="photo-viewer-wrapper">
-          <div className="photo-viewer-header">
-            <span className="photo-counter">{currentIndex + 1} / {GALLERY_IMAGES.length}</span>
-            <button className="close-btn" onClick={closeModal}>✕</button>
-          </div>
-          
-          <div 
-            className="photo-viewer-container"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-          >
-            <img
-              src={GALLERY_IMAGES[currentIndex]}
-              alt={`Photo ${currentIndex + 1}`}
-              draggable={false}
-              className="photo-viewer-image pinch-zoom"
-            />
-          </div>
-
-          <div className="photo-viewer-navigation">
-            <button 
-              className="nav-btn prev-btn" 
-              onClick={goToPrevious}
-              aria-label="이전 사진"
-            >
-              ‹
-            </button>
-            <button 
-              className="nav-btn next-btn" 
-              onClick={goToNext}
-              aria-label="다음 사진"
-            >
-              ›
-            </button>
-          </div>
-
-          <div className="photo-viewer-indicators">
-            {GALLERY_IMAGES.map((_, idx) => (
-              <button
-                key={idx}
-                className={`indicator-dot ${idx === currentIndex ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(idx)}
-              />
-            ))}
-          </div>
-        </div>
-      )
-    }
-
-    openModal({
-      className: "photo-viewer-modal",
-      closeOnClickBackground: false,
-      content: <PhotoViewer />,
-    })
-  }, [openModal, closeModal])
-
-  // 캐러셀에서 사진 클릭 핸들러 추가
-  const handleCarouselImageClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (statusRef.current === "stationary") {
-      openPhotoModal(slideRef.current)
-    }
-  }, [openPhotoModal])
-
   return (
     <LazyDiv className="card gallery">
       <h2 className="english">사진첩</h2>
@@ -478,81 +298,19 @@ export const Gallery = () => {
           <div className={transformClass} style={transformStyle}>
             {["dragging", "dragEnding"].includes(status) && [
               ...(slide === 0
-                ? [
-                    <div className="carousel-item" key={`prev-${CAROUSEL_ITEMS.length - 1}`}>
-                      <img 
-                        src={GALLERY_IMAGES[GALLERY_IMAGES.length - 1]} 
-                        draggable={false} 
-                        alt={`${GALLERY_IMAGES.length - 1}`}
-                        onClick={handleCarouselImageClick}
-                      />
-                    </div>
-                  ]
+                ? [CAROUSEL_ITEMS[CAROUSEL_ITEMS.length - 1]]
                 : []),
-              ...GALLERY_IMAGES.slice(slide === 0 ? 0 : slide - 1, slide + 2).map((image, idx) => {
-                const actualIndex = slide === 0 ? idx : slide - 1 + idx
-                return (
-                  <div className="carousel-item" key={actualIndex}>
-                    <img 
-                      src={image} 
-                      draggable={false} 
-                      alt={`${actualIndex}`}
-                      onClick={handleCarouselImageClick}
-                    />
-                  </div>
-                )
-              }),
-              ...(slide === GALLERY_IMAGES.length - 1
-                ? [
-                    <div className="carousel-item" key={`next-0`}>
-                      <img 
-                        src={GALLERY_IMAGES[0]} 
-                        draggable={false} 
-                        alt="0"
-                        onClick={handleCarouselImageClick}
-                      />
-                    </div>
-                  ]
+              ...CAROUSEL_ITEMS.slice(slide === 0 ? 0 : slide - 1, slide + 2),
+              ...(slide === CAROUSEL_ITEMS.length - 1
+                ? [CAROUSEL_ITEMS[0]]
                 : []),
             ]}
             {status === "moving-right" &&
-              GALLERY_IMAGES.slice(moveOption.srcIdx, moveOption.dstIdx + 1).map((image, idx) => {
-                const actualIndex = moveOption.srcIdx + idx
-                return (
-                  <div className="carousel-item" key={actualIndex}>
-                    <img 
-                      src={image} 
-                      draggable={false} 
-                      alt={`${actualIndex}`}
-                      onClick={handleCarouselImageClick}
-                    />
-                  </div>
-                )
-              })}
+              CAROUSEL_ITEMS.slice(moveOption.srcIdx, moveOption.dstIdx + 1)}
             {status === "moving-left" &&
-              GALLERY_IMAGES.slice(moveOption.dstIdx, moveOption.srcIdx + 1).map((image, idx) => {
-                const actualIndex = moveOption.dstIdx + idx
-                return (
-                  <div className="carousel-item" key={actualIndex}>
-                    <img 
-                      src={image} 
-                      draggable={false} 
-                      alt={`${actualIndex}`}
-                      onClick={handleCarouselImageClick}
-                    />
-                  </div>
-                )
-              })}
-            {["stationary", "clicked", "clickCanceled"].includes(status) && (
-              <div className="carousel-item">
-                <img 
-                  src={GALLERY_IMAGES[slide]} 
-                  draggable={false} 
-                  alt={`${slide}`}
-                  onClick={handleCarouselImageClick}
-                />
-              </div>
-            )}
+              CAROUSEL_ITEMS.slice(moveOption.dstIdx, moveOption.srcIdx + 1)}
+            {["stationary", "clicked", "clickCanceled"].includes(status) &&
+              CAROUSEL_ITEMS[slide]}
           </div>
           <div className="carousel-control">
             <div
@@ -611,10 +369,10 @@ export const Gallery = () => {
                       draggable={false}
                       onClick={() => {
                         if (statusRef.current === "stationary") {
-                          closeModal() // 먼저 전체보기 모달 닫기
-                          setTimeout(() => {
-                            openPhotoModal(idx) // 개별 사진 확대 모달 열기
-                          }, 100)
+                          if (idx !== slideRef.current) {
+                            move(slideRef.current, idx)
+                          }
+                          closeModal()
                         }
                       }}
                     />
