@@ -32,6 +32,8 @@ const GalleryGrid = memo(
 export const Gallery = () => {
   const { openModal, closeModal } = useModal()
 
+  // 임시로 preload 기능 주석 처리
+  /*
   useEffect(() => {
     // preload images
     GALLERY_IMAGES.forEach((image) => {
@@ -39,6 +41,7 @@ export const Gallery = () => {
       img.src = image
     })
   }, [])
+  */
 
   // 개별 사진 확대 보기를 위한 함수
   const openPhotoModal = useCallback((photoIndex: number) => {
