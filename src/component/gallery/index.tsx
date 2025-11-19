@@ -57,6 +57,9 @@ export const Gallery = () => {
       const isDragging = useRef(false)
       const dragDirection = useRef<'horizontal' | 'vertical' | null>(null)
 
+      // 멀티 터치 여부 추적하는 ref 추가
+      const isMultiTouch = useRef(false)
+
       const goToPrevious = () => {
         const newIndex = (currentIndex - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
         setCurrentIndex(newIndex)
@@ -68,6 +71,13 @@ export const Gallery = () => {
       }
 
       const handleTouchStart = (e: React.TouchEvent) => {
+        // 손가락 개수에 따른 멀티 터치 여부 판단
+        if (e.touches.length > 1) {
+          isMultiTouch.current = true
+        } else {
+          isMultiTouch.current = false
+        }
+
         if (e.touches.length === 1) {
           startX.current = e.touches[0].clientX
           startY.current = e.touches[0].clientY
@@ -80,6 +90,12 @@ export const Gallery = () => {
       }
 
       const handleTouchMove = (e: React.TouchEvent) => {
+        // [수정] 움직이는 도중에도 손가락이 2개 이상이면 멀티 터치로 플래그 설정
+        if (e.touches.length > 1) {
+          isMultiTouch.current = true
+          return // 줌 동작 중에는 스와이프 로직 계산 방지
+        }
+
         if (e.touches.length === 1) {
           // state를 업데이트하는 대신 ref의 현재 값만 변경
           deltaX.current = e.touches[0].clientX - startX.current
@@ -99,6 +115,12 @@ export const Gallery = () => {
       }
 
       const handleTouchEnd = (e: React.TouchEvent) => {
+        // [추가] 줌(멀티 터치) 동작이 있었다면 닫기 로직을 실행하지 않음
+        if (isMultiTouch.current) {
+          isMultiTouch.current = false // (선택) 상태 리셋
+          return
+        }
+        
         if (dragDirection.current === 'horizontal' && isDragging.current) {
           // 터치가 끝났을 때 최종 deltaX 값으로 판단
           if (Math.abs(deltaX.current) > 50) {
