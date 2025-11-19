@@ -236,6 +236,12 @@ $transition-duration: 0.3s;
     flex-direction: column;
     position: relative;
 
+    /* 모바일 브라우저의 당겨서 새로고침 방지 */
+    overscroll-behavior: none;
+
+    /* 브라우저의 기본 터치 동작 제어 */
+    touch-action: pinth-zoom;
+
     /* 닫기 버튼을 우측 상단에 고정시킵니다. */
     .close-btn {
       position: fixed;
