@@ -57,7 +57,7 @@ export const Gallery = () => {
       const isDragging = useRef(false)
       const dragDirection = useRef<'horizontal' | 'vertical' | null>(null)
 
-      // 멀티 터치 여부 추적하는 ref 추가
+      // 멀티 터치 여부 추적하는 ref 추가  
       const isMultiTouch = useRef(false)
 
       // 인디케이터 자동 스크롤을 위한 ref
