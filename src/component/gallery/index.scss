@@ -265,12 +265,18 @@ $transition-duration: 0.3s;
   }
 
   .photo-viewer-wrapper {
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95); // 사진 뷰어의 전체 배경색
+    height: 100dvh; // 모바일 브라우저 주소창 대응
+    background: rgba(0, 0, 0, 0.9); // 약간 더 투명하게
+    backdrop-filter: blur(10px); // 블러 효과 추가
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: fixed; // 화면 전체를 덮기 위해 fixed로 변경
+    top: 0;
+    left: 0;
+    z-index: 2000; // 최상위 레벨로 설정
 
     /* 모바일 브라우저의 당겨서 새로고침 방지 */
     overscroll-behavior: none;
@@ -282,19 +288,21 @@ $transition-duration: 0.3s;
     .close-btn {
       position: fixed;
       top: 1rem;
-      right: 1.5rem;
+      right: 2rem;
       background: none;
       border: none;
-      color: white;
-      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 2rem;
+      font-weight: 100; // 얇은 폰트
       cursor: pointer;
       padding: 0.5rem;
-      border-radius: 50%;
-      transition: background-color 0.2s ease;
-      z-index: 1001; // 다른 요소들보다 위에 오도록 z-index 설정
+      transition: color 0.2s ease, transform 0.2s ease;
+      z-index: 1001;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        transform: scale(1.1);
+        background: none; // 배경 제거
       }
     }
 
@@ -303,7 +311,7 @@ $transition-duration: 0.3s;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: auto;
+      overflow: hidden; // 스크롤 제거하여 한 화면에 표시
       padding-top: 0;
       /* 헤더가 없으므로 padding-top 제거 */
       padding-bottom: 1rem;
@@ -339,31 +347,27 @@ $transition-duration: 0.3s;
       z-index: 999;
 
       .nav-btn {
-        background: rgba(0, 0, 0, 0.4);
+        background: transparent; // 배경 제거
         border: none;
-        color: white;
-        font-size: 2rem;
-        width: 3rem;
-        height: 3rem;
-        border-radius: 50%;
+        color: rgba(255, 255, 255, 0.5); // 기본 상태에서 더 투명하게
+        font-size: 3rem; // 화살표 크기 키움
+        width: 4rem;
+        height: 4rem;
         cursor: pointer;
         pointer-events: all;
-        transition: background-color 0.2s ease; // transform transition 제거
-        display: flex; // span을 중앙 정렬하기 위해 추가
+        transition: color 0.2s ease, transform 0.2s ease;
+        display: flex;
         justify-content: center;
         align-items: center;
 
         span {
-          color: rgba(255, 255, 255, 0.7);
-          transition: transform 0.2s ease; // span에 transform transition 적용
+          font-weight: 100; // 얇은 폰트
         }
 
         &:hover {
-          background: rgba(0, 0, 0, 0.8);
-
-          span {
-            transform: scale(1.1); // span만 확대
-          }
+          background: transparent;
+          color: white;
+          transform: scale(1.1);
         }
 
         &.prev-btn {
@@ -387,22 +391,26 @@ $transition-duration: 0.3s;
       color: white;
       width: 100%; // 너비 100%
       z-index: 1000;
+      flex-shrink: 0; // 푸터 높이 고정
 
       .photo-counter,
       .photo-counter-placeholder {
-        font-size: 1rem;
-        color: white;
-        // opacity: 0.2;
-        flex: 1 0 0; // flex-grow: 1, flex-shrink: 0, flex-basis: 0
-        min-width: 50px; // 최소 너비 보장
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        flex: 1 0 0;
+        min-width: 50px;
       }
 
       .photo-counter {
-        text-align: left; // 왼쪽 정렬
+        text-align: left;
+        font-variant-numeric: tabular-nums; // 숫자 너비 고정
       }
 
       .photo-counter-placeholder {
-        text-align: right; // 오른쪽 정렬 (내용이 없어서 시각적 변화는 없음)
+        text-align: right;
       }
     }
 
@@ -412,31 +420,42 @@ $transition-duration: 0.3s;
       transform: none;
       background: none; // 부모인 footer의 배경을 사용하므로 제거
       padding: 0;
-      flex-shrink: 0; // 인디케이터 너비가 줄어들지 않도록 설정
+      flex-shrink: 1; // 공간이 부족하면 줄어들도록 설정
+      min-width: 0; // flex item이 content 크기보다 작아질 수 있도록 설정
 
       // 기존 스타일 유지
       display: flex;
       gap: 0.5rem;
-      max-width: 90%;
+      max-width: 120px; // 약 7개의 인디케이터가 보이도록 너비 제한
       overflow-x: auto;
 
+      // 스크롤바 숨기기
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
       .indicator-dot {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
         border: none;
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.2);
         cursor: pointer;
-        transition: background-color 0.2s ease, transform 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         flex-shrink: 0;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.5);
           transform: scale(1.2);
         }
 
         &.active {
           background: white;
+          transform: scale(1.2);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
       }
     }

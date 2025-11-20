@@ -60,6 +60,21 @@ export const Gallery = () => {
       // 멀티 터치 여부 추적하는 ref 추가
       const isMultiTouch = useRef(false)
 
+      // 인디케이터 자동 스크롤을 위한 ref
+      const indicatorRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+      // currentIndex가 변경될 때마다 해당 인디케이터로 스크롤
+      useEffect(() => {
+        const activeIndicator = indicatorRefs.current[currentIndex]
+        if (activeIndicator) {
+          activeIndicator.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          })
+        }
+      }, [currentIndex])
+
       const goToPrevious = () => {
         const newIndex = (currentIndex - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
         setCurrentIndex(newIndex)
@@ -220,6 +235,7 @@ export const Gallery = () => {
               {GALLERY_IMAGES.map((_, idx) => (
                 <button
                   key={idx}
+                  ref={(el) => { indicatorRefs.current[idx] = el }}
                   className={`indicator-dot ${idx === currentIndex ? 'active' : ''}`}
                   onClick={() => setCurrentIndex(idx)}
                 />
