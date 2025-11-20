@@ -280,9 +280,10 @@ $transition-duration: 0.3s;
 
     /* 모바일 브라우저의 당겨서 새로고침 방지 */
     overscroll-behavior: none;
+    overscroll-behavior-y: contain; // 세로 스크롤 오버스크롤 차단
 
-    /* 브라우저의 기본 터치 동작 제어 */
-    touch-action: manipulation;
+    /* 핀치 줌 허용하되 당겨서 새로고침은 방지 */
+    touch-action: pan-x pan-y pinch-zoom;
 
     /* 닫기 버튼을 우측 상단에 고정시킵니다. */
     .close-btn {
@@ -316,6 +317,7 @@ $transition-duration: 0.3s;
       /* 헤더가 없으므로 padding-top 제거 */
       padding-bottom: 1rem;
       /* 푸터와의 간격을 위해 약간의 여백만 남김 */
+      touch-action: pan-x pan-y pinch-zoom; // 컨테이너에서도 핀치 줌 명시적 허용
 
       .photo-viewer-image {
         max-width: 95%;

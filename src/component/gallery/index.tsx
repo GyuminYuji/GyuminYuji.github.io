@@ -63,24 +63,6 @@ export const Gallery = () => {
       // 인디케이터 자동 스크롤을 위한 ref
       const indicatorRefs = useRef<(HTMLButtonElement | null)[]>([])
 
-      // 카카오톡 브라우저 등에서 핀치 줌을 허용하기 위해 viewport 메타 태그 동적 변경
-      useEffect(() => {
-        const viewportMeta = document.querySelector('meta[name="viewport"]')
-        const originalContent = viewportMeta?.getAttribute('content')
-
-        // 사진 뷰어가 열릴 때 확대/축소 허용
-        if (viewportMeta) {
-          viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5.0, user-scalable=yes')
-        }
-
-        // 사진 뷰어가 닫힐 때 원래대로 복구
-        return () => {
-          if (viewportMeta && originalContent) {
-            viewportMeta.setAttribute('content', originalContent)
-          }
-        }
-      }, [])
-
       // currentIndex가 변경될 때마다 해당 인디케이터로 스크롤
       useEffect(() => {
         const activeIndicator = indicatorRefs.current[currentIndex]

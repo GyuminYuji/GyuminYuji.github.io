@@ -142,6 +142,9 @@ body {
 
   &.modal-open {
     overflow-y: hidden;
+    overscroll-behavior: none; // pull-to-refresh 방지
+    position: fixed; // iOS에서 스크롤 잠금 강화
+    width: 100%;
   }
 
   -webkit-font-smoothing: antialiased;
@@ -162,6 +165,7 @@ body {
   justify-content: flex-start;
   min-height: 100vh;
   min-width: 100vw;
+  touch-action: manipulation; // 페이지 확대는 방지하되 스크롤은 허용
 
   .card-view {
     width: 980px;
