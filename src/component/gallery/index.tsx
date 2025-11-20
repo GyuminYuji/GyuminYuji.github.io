@@ -221,10 +221,13 @@ export const Gallery = () => {
             onMouseUp={handleMouseUp}
           >
             <img
+              key={currentIndex} // Force re-render to cleanup previous image
               src={GALLERY_IMAGES[currentIndex]}
               alt={`Photo ${currentIndex + 1}`}
               draggable={false}
               className="photo-viewer-image pinch-zoom"
+              loading="eager" // Load immediately for better UX
+              decoding="async" // Non-blocking decode
             />
           </div>
 
