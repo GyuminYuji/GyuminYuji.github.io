@@ -2,6 +2,7 @@
   .addr {
     line-height: 2;
     margin-bottom: 1rem;
+
     .detail {
       opacity: 0.6;
     }
@@ -11,6 +12,7 @@
     height: 20rem;
     position: relative;
     z-index: 3;
+
     .lock {
       position: absolute;
       top: 0;
@@ -21,12 +23,14 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+
       .lock-message {
         background-color: var(--dark-color);
         color: var(--white-color);
         padding: 0.5rem;
         text-align: center;
         font-size: 0.8rem;
+
         svg {
           display: inline;
           width: 0.8rem;
@@ -35,6 +39,7 @@
         }
       }
     }
+
     .lock-button {
       position: absolute;
       top: 3%;
@@ -49,6 +54,7 @@
       justify-content: center;
       align-items: center;
       color: white;
+
       svg {
         width: 80%;
         height: 80%;
@@ -59,6 +65,7 @@
         opacity: 0.5;
       }
     }
+
     .map-inner {
       height: 100%;
       width: 100%;
@@ -69,7 +76,8 @@
     display: flex;
     padding: 0.7rem;
     background-color: var(--theme-bg-color);
-    > button {
+
+    >button {
       flex: 1.5;
       border-right: 1px solid var(--dark-grey-color);
       position: relative;
@@ -81,7 +89,7 @@
         border-right: none;
       }
 
-      > img {
+      >img {
         vertical-align: middle;
         margin-right: 0.4rem;
         width: 0.9rem;
@@ -95,15 +103,16 @@
     grid-template-columns: 2rem 1fr;
     text-align: left;
     row-gap: 0.7rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0; // 섹션 사이 간격 축소 (1rem → 0.5rem)
 
-    > * {
+    >* {
       align-self: center;
     }
 
     .transportation-icon-wrapper {
       display: flex;
       justify-content: center;
+
       .transportation-icon {
         width: 1.3rem;
         height: 1.3rem;
