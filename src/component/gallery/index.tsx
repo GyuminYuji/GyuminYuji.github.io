@@ -48,7 +48,7 @@ export const Gallery = () => {
     const PhotoViewer = () => {
       console.log(`PhotoViewer is rendering. Current index: ${photoIndex}`);
       const [currentIndex, setCurrentIndex] = useState(photoIndex)
-      
+
       const startX = useRef(0)
       const startY = useRef(0)
       // deltaX, deltaY를 state가 아닌 ref로 변경하여 리렌더링 방지
@@ -108,6 +108,7 @@ export const Gallery = () => {
                 isDragging.current = true
               } else {
                 dragDirection.current = 'vertical'
+                isDragging.current = true
               }
             }
           }
@@ -120,7 +121,15 @@ export const Gallery = () => {
           isMultiTouch.current = false // (선택) 상태 리셋
           return
         }
-        
+
+        // 2. [추가] 화면이 확대(Zoom)된 상태라면 스와이프/닫기 동작 차단
+        // visualViewport.scale이 1보다 크면 확대된 상태입니다. (약간의 오차 허용 1.05)
+        if (window.visualViewport && window.visualViewport.scale > 1.05) {
+          isDragging.current = false
+          dragDirection.current = null
+          return
+        }
+
         if (dragDirection.current === 'horizontal' && isDragging.current) {
           // 터치가 끝났을 때 최종 deltaX 값으로 판단
           if (Math.abs(deltaX.current) > 50) {
@@ -128,9 +137,10 @@ export const Gallery = () => {
             else goToNext()
           }
         } else if (!isDragging.current && dragDirection.current !== 'horizontal') {
+          if (e.cancelable) e.preventDefault()
           closeModal()
         }
-        
+
         isDragging.current = false
         dragDirection.current = null
       }
@@ -169,7 +179,7 @@ export const Gallery = () => {
           e.preventDefault()
           // 마우스 버튼을 뗐을 때 최종 deltaX 값으로 판단
           const finalDeltaX = e.clientX - startX.current
-          
+
           if (Math.abs(finalDeltaX) > 50) {
             if (finalDeltaX > 0) goToPrevious()
             else goToNext()
@@ -177,7 +187,7 @@ export const Gallery = () => {
         } else if (!isDragging.current && dragDirection.current !== 'horizontal') {
           closeModal()
         }
-        
+
         isDragging.current = false
         dragDirection.current = null
       }
@@ -185,8 +195,8 @@ export const Gallery = () => {
       return (
         <div className="photo-viewer-wrapper">
           <button className="close-btn" onClick={closeModal}>✕</button>
-          
-          <div 
+
+          <div
             className="photo-viewer-container"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -220,15 +230,15 @@ export const Gallery = () => {
           </div>
 
           <div className="photo-viewer-navigation">
-            <button 
-              className="nav-btn prev-btn" 
+            <button
+              className="nav-btn prev-btn"
               onClick={goToPrevious}
               aria-label="이전 사진"
             >
               <span>‹</span>
             </button>
-            <button 
-              className="nav-btn next-btn" 
+            <button
+              className="nav-btn next-btn"
               onClick={goToNext}
               aria-label="다음 사진"
             >
@@ -249,7 +259,7 @@ export const Gallery = () => {
   return (
     <div className="card gallery">
       <h2 className="english">사진첩</h2>
-      
+
       {GALLERY_IMAGES.length === 0 ? (
         <div>이미지가 없습니다.</div>
       ) : (
