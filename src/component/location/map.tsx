@@ -23,7 +23,7 @@ const NaverMap = () => {
   const ref = useRef<HTMLDivElement>(null)
   const [locked, setLocked] = useState(true)
   const [showLockMessage, setShowLockMessage] = useState(false)
-  const lockMessageTimeout = useRef<NodeJS.Timeout>()
+  const lockMessageTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const checkDevice = () => {
     const userAgent = window.navigator.userAgent
