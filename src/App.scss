@@ -207,6 +207,17 @@ body {
         }
       }
 
+      &.lazy-active {
+        @media (max-width: 980px) {
+          .card {
+            animation-name: lazy-fade-in;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+            animation-timing-function: ease-out;
+          }
+        }
+      }
+
       .card {
         background-color: var(--light-color);
         padding: 1rem;
@@ -224,12 +235,7 @@ body {
 
           opacity: 0;
 
-          &.lazy-active {
-            animation-name: lazy-fade-in;
-            animation-duration: 1s;
-            animation-fill-mode: forwards;
-            animation-timing-function: ease-out;
-          }
+
 
 
           @media print {

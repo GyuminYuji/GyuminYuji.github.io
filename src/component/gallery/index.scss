@@ -17,6 +17,22 @@ $transition-duration: 0.3s;
     justify-content: flex-start;
   }
 
+  // Mobile fade-in animation when parent card-group becomes active
+  @at-root {
+    @media (max-width: 980px) {
+      .gallery.card {
+        opacity: 0; // 초기 상태를 투명하게 설정
+      }
+
+      .card-group.lazy-active>.gallery.card {
+        animation-name: lazy-fade-in;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-out;
+      }
+    }
+  }
+
   .carousel-wrapper {
     display: flex;
     flex-direction: column;
@@ -188,11 +204,7 @@ $transition-duration: 0.3s;
 
   // 모바일 최적화
   @media (max-width: 980px) {
-    &.card {
-      opacity: 1 !important;
-      animation: none !important;
-      transform: none !important;
-    }
+
 
     .photo-grid {
       // 데스크톱에서 사용하던 높이 제한 및 스크롤 관련 속성을 모두 초기화합니다.
