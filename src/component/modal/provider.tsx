@@ -18,12 +18,10 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
   ) as React.RefObject<HTMLDivElement>
   const modalFocusTrapInitialized = useRef(false)
   const modalKey = useRef(0)
+  const scrollY = useRef(0)
 
   const openModal = useCallback((modalInfo: ModalInfo) => {
     setModalInfoList((modalInfoList) => {
-      if (modalInfoList.length === 0) {
-        document.body.classList.add("modal-open")
-      }
       return [...modalInfoList, { ...modalInfo, key: modalKey.current++ }]
     })
     modalFocusTrapInitialized.current = false
@@ -31,12 +29,25 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
   const closeModal = useCallback(() => {
     setModalInfoList((modalInfoList) => {
       const result = modalInfoList.slice(0, -1)
-      if (result.length === 0) {
-        document.body.classList.remove("modal-open")
-      }
       return result
     })
   }, [])
+
+  useEffect(() => {
+    if (modalInfoList.length > 0) {
+      if (!document.body.classList.contains("modal-open")) {
+        scrollY.current = window.scrollY
+        document.body.style.top = `-${scrollY.current}px`
+        document.body.classList.add("modal-open")
+      }
+    } else {
+      if (document.body.classList.contains("modal-open")) {
+        document.body.classList.remove("modal-open")
+        document.body.style.top = ""
+        window.scrollTo(0, scrollY.current)
+      }
+    }
+  }, [modalInfoList])
 
   useEffect(() => {
     if (modalInfoList.length === 0) return
@@ -55,25 +66,25 @@ export const ModalProvider = ({ children }: PropsWithChildren) => {
         } else if (!modalFocusTrapInitialized.current) {
           e.preventDefault()
           modalFocusTrapInitialized.current = true
-          ;(FocusableElements[0] as HTMLElement).focus()
+            ; (FocusableElements[0] as HTMLElement).focus()
         } else if (!document.activeElement) {
           e.preventDefault()
-          ;(FocusableElements[0] as HTMLElement).focus()
+            ; (FocusableElements[0] as HTMLElement).focus()
         } else if (
           document.activeElement === FocusableElements[0] &&
           e.shiftKey
         ) {
           e.preventDefault()
-          ;(
-            FocusableElements[FocusableElements.length - 1] as HTMLElement
-          ).focus()
+            ; (
+              FocusableElements[FocusableElements.length - 1] as HTMLElement
+            ).focus()
         } else if (
           document.activeElement ===
-            FocusableElements[FocusableElements.length - 1] &&
+          FocusableElements[FocusableElements.length - 1] &&
           !e.shiftKey
         ) {
           e.preventDefault()
-          ;(FocusableElements[0] as HTMLElement).focus()
+            ; (FocusableElements[0] as HTMLElement).focus()
         }
       }
     }
