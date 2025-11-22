@@ -61,8 +61,11 @@ export const Information2 = () => {
                           onClick={async () => {
                             if (account) {
                               try {
-                                navigator.clipboard.writeText(account)
-                                alert(account + "\n복사되었습니다.")
+                                // "<은행이름>\n<계좌번호> (<예금주>)" 형식에서 "<은행이름> <계좌번호>" 추출
+                                const match = account.match(/^(.+?)\n([\d-]+)/)
+                                const copyText = match ? `${match[1]} ${match[2]}` : account
+                                navigator.clipboard.writeText(copyText)
+                                alert(copyText + "\n복사되었습니다.")
                               } catch {
                                 alert("복사에 실패했습니다.")
                               }
@@ -114,8 +117,11 @@ export const Information2 = () => {
                           onClick={async () => {
                             if (account) {
                               try {
-                                navigator.clipboard.writeText(account)
-                                alert(account + "\n복사되었습니다.")
+                                // "<은행이름>\n<계좌번호> (<예금주>)" 형식에서 "<은행이름> <계좌번호>" 추출
+                                const match = account.match(/^(.+?)\n([\d-]+)/)
+                                const copyText = match ? `${match[1]} ${match[2]}` : account
+                                navigator.clipboard.writeText(copyText)
+                                alert(copyText + "\n복사되었습니다.")
                               } catch {
                                 alert("복사에 실패했습니다.")
                               }
