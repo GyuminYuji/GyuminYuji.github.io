@@ -44,6 +44,9 @@ export const Calendar = memo(() => {
       <h2 className="english">결혼식</h2>
       <div className="break" />
       {WEDDING_DATE.format("YYYY년 MMMM D일 dddd A h시 mm분")}
+      <div className="month-header">
+        {WEDDING_DATE.format("YYYY년 M월")}
+      </div>
       <div className="calendar-wrapper">
         <div className="head holiday">
           <span>일</span>

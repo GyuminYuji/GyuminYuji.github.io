@@ -1,11 +1,19 @@
 .calendar {
+  .month-header {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1.5rem 0 0.3rem 0;
+    color: var(--text-color);
+  }
+
   .calendar-wrapper {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin: 1rem;
     border: 1px solid var(--light-grey-color);
 
-    > div {
+    >div {
       aspect-ratio: 1;
       display: flex;
       justify-content: center;
@@ -14,10 +22,11 @@
       &.head {
         aspect-ratio: auto;
         background-color: var(--light-grey-color);
+        padding: 0.2rem 0;
       }
 
       &.holiday {
-        > span {
+        >span {
           color: var(--red-color);
         }
       }
@@ -25,11 +34,11 @@
       &.wedding-date {
         position: relative;
 
-        > span {
+        >span {
           z-index: 1;
         }
 
-        > div.heart {
+        >div.heart {
           width: 50%;
           height: 50%;
           background: var(--alt-color-2);
@@ -38,6 +47,7 @@
           position: absolute;
           transform: rotate(45deg);
           z-index: 0;
+
           &::before {
             content: "";
             width: 100%;
@@ -48,6 +58,7 @@
             border-radius: 50%;
             background: var(--alt-color-2);
           }
+
           &::after {
             content: "";
             width: 100%;
@@ -72,14 +83,17 @@
       width: 15rem;
       grid-template-columns: 1fr 1rem 1fr 1rem 1fr 1rem 1fr;
       align-items: center;
+
       * {
         margin: 0 0.1rem;
       }
+
       .count {
         opacity: 0.8;
         font-weight: bold;
         font-size: 1.2rem;
       }
+
       .unit {
         font-weight: bold;
         font-size: 0.6rem;
@@ -90,6 +104,7 @@
     .message {
       margin-top: 2rem;
       margin-bottom: 1.5rem;
+
       .d-day {
         font-weight: bold;
         color: var(--alt-color);
