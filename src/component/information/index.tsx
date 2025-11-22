@@ -62,8 +62,11 @@ export const Information2 = () => {
                             if (account) {
                               try {
                                 // "<은행이름>\n<계좌번호> (<예금주>)" 형식에서 "<은행이름> <계좌번호>" 추출
-                                const match = account.match(/^(.+?)\n([\d-]+)/)
-                                const copyText = match ? `${match[1]} ${match[2]}` : account
+                                // 줄바꿈을 split으로 처리
+                                const lines = account.split(/[\r\n]+/)
+                                const bankName = lines[0]?.trim()
+                                const accountNumber = lines[1]?.match(/[\d-]+/)?.[0]
+                                const copyText = bankName && accountNumber ? `${bankName} ${accountNumber}` : account
                                 navigator.clipboard.writeText(copyText)
                                 alert(copyText + "\n복사되었습니다.")
                               } catch {
@@ -118,8 +121,11 @@ export const Information2 = () => {
                             if (account) {
                               try {
                                 // "<은행이름>\n<계좌번호> (<예금주>)" 형식에서 "<은행이름> <계좌번호>" 추출
-                                const match = account.match(/^(.+?)\n([\d-]+)/)
-                                const copyText = match ? `${match[1]} ${match[2]}` : account
+                                // 줄바꿈을 split으로 처리
+                                const lines = account.split(/[\r\n]+/)
+                                const bankName = lines[0]?.trim()
+                                const accountNumber = lines[1]?.match(/[\d-]+/)?.[0]
+                                const copyText = bankName && accountNumber ? `${bankName} ${accountNumber}` : account
                                 navigator.clipboard.writeText(copyText)
                                 alert(copyText + "\n복사되었습니다.")
                               } catch {
