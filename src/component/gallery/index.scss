@@ -335,6 +335,7 @@ $transition-duration: 0.3s;
         max-width: 95%;
         max-height: 95%;
         object-fit: contain;
+        will-change: transform;
 
         &.pinch-zoom {
           touch-action: pan-x pan-y pinch-zoom;

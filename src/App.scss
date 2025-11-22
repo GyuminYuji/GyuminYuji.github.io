@@ -114,6 +114,10 @@ body.modal-open .music-button {
   pointer-events: none;
 }
 
+body.modal-open .card-view {
+  visibility: hidden;
+}
+
 @keyframes lazy-fade-in {
   from {
     opacity: 0;
